@@ -7,25 +7,52 @@ import { Provider } from 'react-redux';
 import createLocation from 'history/lib/createLocation';
 import { fetchComponentDataBeforeRender } from '../shared/api/fetchComponentDataBeforeRender';
 
+import webpack from 'webpack';
+import webpackConfig from '../../webpack.config';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+
 import routes from '../shared/routes/index';
 import configureStore from '../shared/store/configureStore';
 import packagejson from '../../package.json';
 
 const app = express();
 
-app.use('/assets', express.static(path.join(__dirname, '../client/assets')))
+app.set('port', process.env.PORT || 3000);
+app.set('host', process.env.HOSTNAME || "localhost");
 
-var webpack = require('webpack')
-var webpackDevMiddleware = require('webpack-dev-middleware')
-var webpackHotMiddleware = require('webpack-hot-middleware')
+const renderFullPage = (html, initialState) => {
+  return `
+  <!doctype html>
+  <html lang="utf-8">
+    <head>
+    <title>ServeReact</title>
+    </head>
+    <body>
+    <div class="container">${html}</div>
+    <script>
+      window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
+      console.log(__INITIAL_STATE__)
+    </script>
+    <script src="/static/bundle.js"></script>
+    </body>
+  </html>
+  `
+};
 
-var config = require('../../webpack.config')
-var compiler = webpack(config)
+if (process.env.NODE_ENV !== 'production') {
+  const compiler = webpack(webpackConfig);
+  app.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath
+  }));
+  app.use(webpackHotMiddleware(compiler));
+} else {
+  app.use('/assets', express.static(path.join(__dirname, '../client/assets')));
+}
 
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
-app.use(webpackHotMiddleware(compiler))
 
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
 
   const location = createLocation(req.url);
 
@@ -53,7 +80,7 @@ app.get('/', (req, res) => {
       .then(html => {
         const componentHTML = renderToString(initialView);
         const initialState = store.getState();
-        res.status(200).end(renderFullPage(componentHTML,initialState))
+        res.status(200).end(renderFullPage(componentHTML,initialState));
       })
       .catch(err => {
         console.log(err)
@@ -63,29 +90,12 @@ app.get('/', (req, res) => {
   });
 });
 
-function renderFullPage(html, initialState) {
-  return `
-  <!doctype html>
-  <html lang="utf-8">
-    <head>
-    <title>ServeReact</title>
-    </head>
-    <body>
-    <div class="container">${html}</div>
-    <script>
-      window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
-      console.log(__INITIAL_STATE__)
-    </script>
-    <script src="/static/bundle.js"></script>
-    </body>
-  </html>
-  `
-};
 
-// example of handling 404 pages
-app.get('*', function(req, res) {
-  res.status(404).send('Server.js > 404 - Page Not Found');
-})
+//
+// // example of handling 404 pages
+// app.get('*', function(req, res) {
+//   res.status(404).send('Server.js > 404 - Page Not Found');
+// })
 
 // global error catcher, need four arguments
 app.use((err, req, res, next) => {
@@ -98,6 +108,7 @@ process.on('uncaughtException', evt => {
   console.log( 'uncaughtException: ', evt );
 })
 
-app.listen(3000, function(){
-  console.log('Listening on port 3000');
+app.listen(app.get('port'), () => {
+	console.info("==> ✅  Server is listening");
+	console.info("==> 🌎  Go to http://%s:%s", app.get('host'), app.get('port'));
 });
