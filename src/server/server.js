@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import createLocation from 'history/lib/createLocation';
 import { fetchComponentDataBeforeRender } from '../shared/api/fetchComponentDataBeforeRender';
 
+import Helm from 'react-helmet';
+
 import webpack from 'webpack';
 import webpackConfig from '../../webpack.config';
 import webpackDevMiddleware from 'webpack-dev-middleware';
@@ -22,22 +24,24 @@ app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOSTNAME || "localhost");
 
 const renderFullPage = (html, initialState) => {
+  const head = Helm.rewind();
   return `
-  <!doctype html>
-  <html lang="utf-8">
-    <head>
-    <title>ServeReact</title>
-    </head>
-    <body>
-    <div class="container">${html}</div>
-    <script>
-      window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
-      console.log(__INITIAL_STATE__)
-    </script>
-    <script src="/static/bundle.js"></script>
-    </body>
-  </html>
-  `
+    <!doctype html>
+    <html lang="utf-8">
+      <head>
+        ${head.title.toString()}
+        ${head.meta.toString()}
+        ${head.link.toString()}
+      </head>
+      <body>
+        <div class="container">${html}</div>
+        <script>
+          window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
+        </script>
+        <script src="/assets/bundle.js"></script>
+      </body>
+    </html>
+  `;
 };
 
 if (process.env.NODE_ENV !== 'production') {
@@ -52,6 +56,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
+// SSR Logic
 app.get('*', (req, res) => {
 
   const location = createLocation(req.url);
@@ -91,11 +96,11 @@ app.get('*', (req, res) => {
 });
 
 
-//
-// // example of handling 404 pages
-// app.get('*', function(req, res) {
-//   res.status(404).send('Server.js > 404 - Page Not Found');
-// })
+
+// example of handling 404 pages
+app.get('*', function(req, res) {
+  res.status(404).send('Server.js > 404 - Page Not Found');
+})
 
 // global error catcher, need four arguments
 app.use((err, req, res, next) => {

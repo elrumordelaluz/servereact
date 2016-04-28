@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import Helmet from 'react-helmet';
 
 class App extends Component {
   constructor(props){
@@ -11,6 +10,9 @@ class App extends Component {
   render() {
     return (
       <div className='my-app'>
+        <Helmet
+          title="Home"
+          titleTemplate="MySite.com - %s" />
         <span className="version">v{this.props.version}</span>
         {this.props.children}
       </div>
