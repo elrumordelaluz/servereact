@@ -1,3 +1,4 @@
+
 'use strict';
 
 var path = require('path');
@@ -9,7 +10,7 @@ module.exports = {
 
   entry: [
     'webpack-hot-middleware/client',
-    './client/index.js'
+    './src/client/index.js'
   ],
 
   output: {

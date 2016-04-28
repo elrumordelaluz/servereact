@@ -1,21 +1,15 @@
 import express from 'express';
 import path from 'path';
-
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-
 import { Router, RouterContext, match } from 'react-router';
 import { Provider } from 'react-redux';
 import createLocation from 'history/lib/createLocation';
-import routes from '../shared/routes/index';
-
-import configureStore from '../shared/store/configureStore';
 import { fetchComponentDataBeforeRender } from '../shared/api/fetchComponentDataBeforeRender';
 
-import packagejson from '../package.json';
-
-const ROOT_URL = 'https://orion-api.herokuapp.com';
-const TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiTGlvbmVsIFQiLCJwYXNzd29yZCI6ImVscnVtb3JkZWxhbHV6IiwiaWF0IjoxNDU5MjQ1Nzc0LCJleHAiOjE0NjE4Mzc3NzR9.PYcKG04L9ZWUJc6f5neseU-g5O-vS-keBVNJCtW3cVw';
+import routes from '../shared/routes/index';
+import configureStore from '../shared/store/configureStore';
+import packagejson from '../../package.json';
 
 const app = express();
 
@@ -25,7 +19,7 @@ var webpack = require('webpack')
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
 
-var config = require('../webpack.config')
+var config = require('../../webpack.config')
 var compiler = webpack(config)
 
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
@@ -57,7 +51,7 @@ app.get('/', (req, res) => {
     //This method waits for all render component promises to resolve before returning to browser
     fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params)
       .then(html => {
-        const componentHTML = React.renderToString(initialView);
+        const componentHTML = renderToString(initialView);
         const initialState = store.getState();
         res.status(200).end(renderFullPage(componentHTML,initialState))
       })

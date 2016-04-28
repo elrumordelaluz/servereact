@@ -4,8 +4,8 @@
   "description": "React Server Rendering",
   "main": "index.js",
   "scripts": {
-    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --port 3004",
-    "server": "node server/index.js"
+    "start": "NODE_ENV=development node src/server/index.js --progress --colors --profile",
+    "start-prod": "NODE_ENV=production node src/server/index.js --progress --colors --profile"
   },
   "keywords": [],
   "author": "Lionel T <elrumordelaluz@hotmail.com> (elrumordelaluz.com)",
@@ -25,6 +25,7 @@
     "css-loader": "^0.23.1",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
+    "merge": "^1.2.0",
     "postcss-loader": "^0.8.2",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
