@@ -4,8 +4,8 @@ export default class Posts extends Component {
   render () {
     return (
       <div>
-        {this.props.posts.map((post, i) =>
-          <blockquote key={i}>{post.title} <a href={post.url}>Read</a></blockquote>
+        {this.props.posts.map(post =>
+          <blockquote key={post.id}>{post.title} <a href={post.url}>Read</a></blockquote>
         )}
       </div>
     );

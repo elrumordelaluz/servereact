@@ -84,7 +84,7 @@ app.get('*', (req, res) => {
     // TODO: Make a way more generic to manage params instead of `renderProps.params.id`,
     //      now returns an error in the path without params
     fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params.id)
-      .then(html => {
+      .then(() => {
         const componentHTML = renderToString(initialView);
         const initialState = store.getState();
         res.status(200).end(renderFullPage(componentHTML,initialState));

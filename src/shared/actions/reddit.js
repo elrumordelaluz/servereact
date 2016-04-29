@@ -8,7 +8,7 @@ export const POSTS_GET_REQUEST = 'POSTS_GET_REQUEST';
 export const POSTS_GET_SUCCESS = 'POSTS_GET_SUCCESS';
 export const POSTS_GET_FAILURE = 'POSTS_GET_FAILURE';
 
-export function selectReddit(reddit) {
+export function selectReddit(reddit = 'reactjs') {
   return {
     type: SELECT_REDDIT,
     reddit
