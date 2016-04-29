@@ -10,7 +10,8 @@ import NotFound from '../components/NotFound';
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={Index} />
-    <Route path="result" component={RedditPage} />
+    <Route path="reddit" component={RedditPage} />
+    <Route path="reddit/:id" component={RedditPage} />
     <Route path="*" component={NotFound} />
   </Route>
 );

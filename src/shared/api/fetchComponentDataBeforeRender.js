@@ -9,6 +9,6 @@ export function fetchComponentDataBeforeRender(dispatch, components, params) {
       .concat((current.WrappedComponent ? current.WrappedComponent.need : []) || [])
       .concat(prev);
     }, []);
-    const promises = needs.map(need => dispatch(need()));
+    const promises = needs.map(need => dispatch(need(params)));
     return Promise.all(promises);
 }

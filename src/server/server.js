@@ -81,7 +81,9 @@ app.get('*', (req, res) => {
     );
 
     //This method waits for all render component promises to resolve before returning to browser
-    fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params)
+    // TODO: Make a way more generic to manage params instead of `renderProps.params.id`,
+    //      now returns an error in the path without params
+    fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params.id)
       .then(html => {
         const componentHTML = renderToString(initialView);
         const initialState = store.getState();

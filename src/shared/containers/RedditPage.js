@@ -7,7 +7,8 @@ import * as RedditActions from '../actions/reddit';
 //Data that needs to be called before rendering the component
 //This is used for server side rending via the fetchComponentDataBeforeRending() method
 Reddit.need = [
-  RedditActions.fetchPosts
+  RedditActions.fetchPosts,
+  RedditActions.selectReddit
 ]
 
 function mapStateToProps(state) {
