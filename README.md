@@ -1,27 +1,27 @@
-# React Tiny Starter
+# ServerReact
 
-A pretty tiny **React** starter files using **Webpack** and **css-modules**
+Tiny **Universal React** starter files.
 
 1. Clone this respository
-    
+
     ```
-    $ git clone https://github.com/elrumordelaluz/react-tiny-starter
+    $ git clone https://github.com/elrumordelaluz/servereact
     ```
 
-    - ?Delete the existing git repository 
-        
+    - ?Delete the existing git repository
+
         ```
         $ rm -rf .git
         ```
 
-    - ?Initialize a new git repository 
-    
+    - ?Initialize a new git repository
+
         ```
         $ git init && git add . && git commit -m "Initial commit"
         ```
 
-1. Install dependencies (React, Webpack and Babel stuff)
-    
+1. Install dependencies
+
     ```
     $ npm i
     ```
@@ -31,4 +31,3 @@ A pretty tiny **React** starter files using **Webpack** and **css-modules**
     ```
     $ npm start
     ```
-    
