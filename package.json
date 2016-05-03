@@ -15,6 +15,7 @@
     "url": "https://github.com/elrumordelaluz/react-tiny-starter.git"
   },
   "devDependencies": {
+    "aphrodite": "^0.3.1",
     "autoprefixer": "^6.3.6",
     "babel-core": "^6.7.4",
     "babel-loader": "^6.2.4",

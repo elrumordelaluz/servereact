@@ -8,6 +8,7 @@ import createLocation from 'history/lib/createLocation';
 import { fetchComponentDataBeforeRender } from '../shared/api/fetchComponentDataBeforeRender';
 
 import Helm from 'react-helmet';
+import { StyleSheetServer } from 'aphrodite';
 
 import webpack from 'webpack';
 import webpackConfig from '../../webpack.config';
@@ -23,12 +24,13 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('host', process.env.HOSTNAME || "localhost");
 
-const renderFullPage = (html, initialState) => {
+const renderFullPage = (html, css, initialState) => {
   const head = Helm.rewind();
   return `
     <!doctype html>
     <html lang="utf-8">
       <head>
+        <style data-aphrodite>${css.content}</style>
         ${head.title.toString()}
         ${head.meta.toString()}
         ${head.link.toString()}
@@ -36,6 +38,7 @@ const renderFullPage = (html, initialState) => {
       <body>
         <div class="container">${html}</div>
         <script>
+          window.renderedClassNames = ${JSON.stringify(css.renderedClassNames)};
           window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
         </script>
         <script src="/assets/bundle.js"></script>
@@ -80,14 +83,19 @@ app.get('*', (req, res) => {
       </Provider>
     );
 
+
     //This method waits for all render component promises to resolve before returning to browser
     // TODO: Make a way more generic to manage params instead of `renderProps.params.id`,
     //      now returns an error in the path without params
     fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params.id)
       .then(() => {
-        const componentHTML = renderToString(initialView);
+        // const componentHTML = renderToString(initialView);
+
+        const {html, css} = StyleSheetServer.renderStatic(() => {
+            return renderToString(initialView);
+        });
         const initialState = store.getState();
-        res.status(200).end(renderFullPage(componentHTML,initialState));
+        res.status(200).end(renderFullPage(html, css, initialState));
       })
       .catch(err => {
         console.log(err)
