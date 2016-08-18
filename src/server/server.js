@@ -4,7 +4,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { Router, RouterContext, match } from 'react-router';
 import { Provider } from 'react-redux';
-import createLocation from 'history/lib/createLocation';
+// import { createHistory } from 'history/lib/createLocation';
 import { fetchComponentDataBeforeRender } from '../shared/api/fetchComponentDataBeforeRender';
 
 import Helm from 'react-helmet';
@@ -62,9 +62,7 @@ if (process.env.NODE_ENV !== 'production') {
 // SSR Logic
 app.get('*', (req, res) => {
 
-  const location = createLocation(req.url);
-
-  match ({ routes, location }, ( err, redirectLocation, renderProps ) => {
+  match ({ routes, location: req.url }, ( err, redirectLocation, renderProps ) => {
 
     if(err) {
       console.error(err);
